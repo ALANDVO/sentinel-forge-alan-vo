@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools==73.0.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentinel-forge"
+version = "1.0.0"
+description = "Static analysis toolkit for Claude Code mods (function hooks)"
+authors = [{ name = "Alan Vo", email = "alanvo@gmail.com" }]
+license = { text = "MIT" }
+requires-python = ">=3.12"
+readme = "README.md"
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["backend/tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

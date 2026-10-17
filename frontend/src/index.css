@@ -1,0 +1,32 @@
+/* Sentinel Forge — base styles */
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #14141e;
+  --border: #2a2a3a;
+  --text: #e0e0e8;
+  --text-muted: #8a8a9a;
+  --critical: #ff4757;
+  --warning: #ff9f43;
+  --info: #00d2d3;
+  --success: #2ed573;
+  --accent: #536dfe;
+  --accent-hover: #3b4cca;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}

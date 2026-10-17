@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "sentinel-forge-alan-vo",
+  "owner": "ALANDVO",
+  "email": "alanvo@gmail.com",
+  "domain": "AI/ML developer tools",
+  "summary": "Work in progress: sentinel-forge-alan-vo",
+  "workflows": [
+    "Analyze TypeScript/JavaScript mod source code for safety issues (process execution, file writes, network calls, UI flickering, unbounded loops, missing error handling)",
+    "Track and predict Claude Code subscription usage limits from historical consumption data",
+    "Evaluate mod side-effect declarations against simulated agent event scenarios"
+  ],
+  "auth": "oidc-keycloak-saml-broker",
+  "llm_providers": [
+    "openai-compatible",
+    "anthropic",
+    "gemini",
+    "ollama"
+  ],
+  "status": "work-in-progress"
+}
