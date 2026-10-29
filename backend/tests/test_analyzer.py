@@ -8,7 +8,7 @@ import pytest
 from app.core.analyzer import AnalysisResult, analyze, AnalysisSummary, Finding
 from app.core.rules import get_rule
 
-from backend.tests.samples import (
+from tests.samples import (
     SAFE_MOD,
     UNSAFE_MOD,
     FLICKERING_MOD,

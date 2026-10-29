@@ -4,7 +4,7 @@ from __future__ import annotations
 import pytest
 from fastapi import status
 
-from backend.tests.samples import SAFE_MOD, UNSAFE_MOD
+from tests.samples import SAFE_MOD, UNSAFE_MOD
 
 
 @pytest.mark.usefixtures("demo_settings")
