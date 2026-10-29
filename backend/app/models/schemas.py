@@ -116,4 +116,112 @@ class AuthVerifyResponse(BaseModel):
 
     authenticated: bool
     user: Optional[str] = None
-    role: Optional[str] = None
+
+
+class UsagePatternRequest(BaseModel):
+    """Request body for ingesting usage data."""
+
+    subscription_tier: str = Field(..., pattern="^(free|pro|max)$")
+    tokens_consumed: int = Field(..., ge=0)
+    requests_made: int = Field(..., ge=0)
+    duration_seconds: int = Field(..., ge=0)
+    timestamp: Optional[datetime] = None
+
+
+class UsagePatternResponse(BaseModel):
+    """Response for a single usage pattern record."""
+
+    id: str
+    subscription_tier: str
+    tokens_consumed: int
+    requests_made: int
+    duration_seconds: int
+    timestamp: datetime
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class UsagePatternListResponse(BaseModel):
+    """Paginated list of usage pattern records."""
+
+    items: List[UsagePatternResponse]
+    total: int
+    page: int
+    page_size: int
+    pages: int
+
+
+class UsageTrendResponse(BaseModel):
+    """Historical usage trend data point."""
+
+    period_start: datetime
+    period_end: datetime
+    total_tokens: int
+    total_requests: int
+    avg_tokens_per_request: float
+    token_rate_of_change: float
+    request_rate_of_change: float
+
+
+class UsagePredictionResponse(BaseModel):
+    """Prediction of when subscription limits will be hit."""
+
+    subscription_tier: str
+    current_period_tokens: int
+    current_period_requests: int
+    tokens_limit: int
+    requests_limit: int
+    tokens_used_pct: float
+    requests_used_pct: float
+    estimated_tokens_exhaustion: Optional[datetime] = None
+    estimated_requests_exhaustion: Optional[datetime] = None
+    days_until_tokens_exhaustion: Optional[float] = None
+    days_until_requests_exhaustion: Optional[float] = None
+    tokens_trend: str  # "increasing", "decreasing", "stable"
+    requests_trend: str
+
+
+class AlertThresholdRequest(BaseModel):
+    """Request body for setting alert thresholds."""
+
+    subscription_tier: str = Field(..., pattern="^(free|pro|max)$")
+    tokens_warning_threshold: int = Field(..., ge=0)
+    tokens_critical_threshold: int = Field(..., ge=0)
+    requests_warning_threshold: int = Field(..., ge=0)
+    requests_critical_threshold: int = Field(..., ge=0)
+
+
+class AlertThresholdResponse(BaseModel):
+    """Response for alert threshold configuration."""
+
+    id: str
+    subscription_tier: str
+    tokens_warning_threshold: int
+    tokens_critical_threshold: int
+    requests_warning_threshold: int
+    requests_critical_threshold: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class AlertCheckResponse(BaseModel):
+    """Response for checking current usage against alert thresholds."""
+
+    subscription_tier: str
+    current_tokens: int
+    current_requests: int
+    tokens_status: str  # "ok", "warning", "critical"
+    requests_status: str
+    tokens_warning_threshold: int
+    tokens_critical_threshold: int
+    requests_warning_threshold: int
+    requests_critical_threshold: int
+    tokens_warning_triggered: bool
+    tokens_critical_triggered: bool
+    requests_warning_triggered: bool
+    requests_critical_triggered: bool

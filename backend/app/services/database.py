@@ -51,6 +51,74 @@ class AnalysisRecord(Base):
     )
 
 
+class UsagePattern(Base):
+    """Persistent record of a usage pattern entry."""
+
+    __tablename__ = "usage_patterns"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    subscription_tier = Column(String(50), nullable=False)
+    tokens_consumed = Column(Integer, nullable=False, default=0)
+    requests_made = Column(Integer, nullable=False, default=0)
+    duration_seconds = Column(Integer, nullable=False, default=0)
+    timestamp = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class UsageAlertThreshold(Base):
+    """Threshold configuration for usage alerts per subscription tier."""
+
+    __tablename__ = "usage_alert_thresholds"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    subscription_tier = Column(String(50), nullable=False, unique=True)
+    tokens_warning_threshold = Column(Integer, nullable=False)
+    tokens_critical_threshold = Column(Integer, nullable=False)
+    requests_warning_threshold = Column(Integer, nullable=False)
+    requests_critical_threshold = Column(Integer, nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+
+# Default alert thresholds per subscription tier
+DEFAULT_THRESHOLDS = {
+    "free": {
+        "tokens_warning_threshold": 50000,
+        "tokens_critical_threshold": 80000,
+        "requests_warning_threshold": 500,
+        "requests_critical_threshold": 800,
+    },
+    "pro": {
+        "tokens_warning_threshold": 500000,
+        "tokens_critical_threshold": 800000,
+        "requests_warning_threshold": 5000,
+        "requests_critical_threshold": 8000,
+    },
+    "max": {
+        "tokens_warning_threshold": 2000000,
+        "tokens_critical_threshold": 3200000,
+        "requests_warning_threshold": 20000,
+        "requests_critical_threshold": 32000,
+    },
+}
+
 class AuditLog(Base):
     """Audit log for significant operations."""
 
@@ -105,3 +173,28 @@ class Database:
             yield db
         finally:
             db.close()
+
+
+_default_db: Database | None = None
+
+
+def set_default_database(db: Database) -> None:
+    """Set the default database instance for get_db dependency."""
+    global _default_db
+    _default_db = db
+
+
+def get_default_database() -> Database:
+    """Get the default database instance."""
+    if _default_db is None:
+        raise RuntimeError("Database not initialized. Call set_default_database() first.")
+    return _default_db
+
+
+def get_db() -> Session:
+    """FastAPI dependency for getting a database session."""
+    db = get_default_database()._SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

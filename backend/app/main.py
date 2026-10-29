@@ -9,8 +9,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import analysis as analysis_router
 from app.api import auth as auth_router
+from app.api import usage as usage_router
 from app.core.config import settings
-from app.services.database import Database
+from app.services.database import Database, set_default_database
 
 
 @asynccontextmanager
@@ -42,9 +43,11 @@ def create_app() -> FastAPI:
     # Store in app.state for dependency injection
     app.state.settings = settings
     app.state.db = Database(settings.database_url)
+    set_default_database(app.state.db)
 
     app.include_router(analysis_router.router)
     app.include_router(auth_router.router)
+    app.include_router(usage_router.router)
 
     @app.get("/health")
     async def health() -> dict:
