@@ -49,6 +49,12 @@ class UsagePatternService:
                     subscription_tier=tier, **thresholds
                 )
                 self.db.add(threshold)
+            else:
+                # Update existing threshold with default values
+                existing.tokens_warning_threshold = thresholds["tokens_warning_threshold"]
+                existing.tokens_critical_threshold = thresholds["tokens_critical_threshold"]
+                existing.requests_warning_threshold = thresholds["requests_warning_threshold"]
+                existing.requests_critical_threshold = thresholds["requests_critical_threshold"]
         self.db.commit()
 
     def ingest_usage(self, request: UsagePatternRequest) -> UsagePatternResponse:

@@ -28,6 +28,8 @@ def app():
     test_db._SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     test_app.state.db = test_db
     test_app.state.settings = settings
+    # Create tables for the test database
+    test_db.create_tables()
     return test_app
 
 
