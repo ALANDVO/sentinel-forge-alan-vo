@@ -61,4 +61,4 @@ All mutations are transactional with rollback on failure.
 
 ---
 
-Alan Vo · [alanvo.net](https://alanvo.net)
+Alan Vo · [alanvo.net](https://alanvo.net) · [X: @alanvoasi](https://x.com/alanvoasi)
