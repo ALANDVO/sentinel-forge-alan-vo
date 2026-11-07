@@ -44,3 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auth is demo/API-key only; full OIDC/Keycloak with SAML identity brokering is planned.
 - LLM adapter suite (opt-in advisory explanations) is not yet implemented.
 - Static analysis uses regex pattern matching, not full AST parsing; false positives in comments/strings and false negatives in multi-line chains are documented.
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

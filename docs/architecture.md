@@ -58,3 +58,7 @@ SQLite persistent storage with two tables:
 - **audit_log**: audit trail of save operations
 
 All mutations are transactional with rollback on failure.
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

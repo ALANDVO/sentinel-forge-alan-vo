@@ -68,3 +68,6 @@ Acceptance:
 - Bounded timeouts and redacted error messages
 - Opt-in LLM explanations for analysis findings
 
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)

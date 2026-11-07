@@ -285,3 +285,7 @@ See `.env.example` for a template. Key variables:
 ---
 
 Alan Vo <alanvo@gmail.com>
+
+---
+
+Alan Vo · [alanvo.net](https://alanvo.net)
