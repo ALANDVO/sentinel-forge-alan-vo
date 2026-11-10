@@ -4,6 +4,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.api.deps import get_db
 from app.models.schemas import (
     AlertCheckResponse,
     AlertThresholdRequest,
@@ -14,7 +15,6 @@ from app.models.schemas import (
     UsagePredictionResponse,
     UsageTrendResponse,
 )
-from app.services.database import get_db
 from app.services.usage_pattern import UsagePatternService
 
 router = APIRouter()
