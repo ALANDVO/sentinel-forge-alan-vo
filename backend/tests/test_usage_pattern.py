@@ -204,3 +204,26 @@ class TestAlertCheck:
         assert data["requests_status"] == "ok"
         assert data["tokens_warning_triggered"] is False
         assert data["requests_warning_triggered"] is False
+
+
+class TestUsagePatternIngestEdgeCases:
+    def test_ingest_usage_zero_duration(self, client: TestClient) -> None:
+        """Ingest usage data with duration_seconds=0 is valid."""
+        resp = client.post(
+            "/api/v1/usage",
+            json={
+                "subscription_tier": "free",
+                "tokens_consumed": 100,
+                "requests_made": 5,
+                "duration_seconds": 0,
+            },
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["subscription_tier"] == "free"
+        assert data["tokens_consumed"] == 100
+        assert data["requests_made"] == 5
+        assert data["duration_seconds"] == 0
+        assert "id" in data
+        assert "timestamp" in data
+        assert "created_at" in data
