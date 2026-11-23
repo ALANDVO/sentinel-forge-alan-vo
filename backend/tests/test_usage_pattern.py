@@ -227,3 +227,51 @@ class TestUsagePatternIngestEdgeCases:
         assert "id" in data
         assert "timestamp" in data
         assert "created_at" in data
+
+
+class TestUsagePredictionWithMultipleData:
+    """Tests for prediction endpoint with multiple usage data points."""
+
+    def test_get_prediction_with_two_data_points(self, client: TestClient) -> None:
+        """Predict with 2 data points should compute trends instead of defaulting to stable."""
+        # Ingest 2 data points for free tier
+        client.post(
+            "/api/v1/usage",
+            json={"subscription_tier": "free", "tokens_consumed": 1000, "requests_made": 10, "duration_seconds": 60},
+        )
+        client.post(
+            "/api/v1/usage",
+            json={"subscription_tier": "free", "tokens_consumed": 1500, "requests_made": 15, "duration_seconds": 60},
+        )
+
+        resp = client.get("/api/v1/usage/prediction/free")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["subscription_tier"] == "free"
+        assert "tokens_trend" in data
+        assert "requests_trend" in data
+        # With increasing usage from 1000->1500 tokens and 10->15 requests, trend should be increasing
+        assert data["tokens_trend"] == "increasing"
+        assert data["requests_trend"] == "increasing"
+
+    def test_get_prediction_with_two_data_points_decreasing(self, client: TestClient) -> None:
+        """Predict with 2 decreasing data points should show decreasing trend."""
+        # Ingest 2 data points for pro tier with decreasing usage
+        client.post(
+            "/api/v1/usage",
+            json={"subscription_tier": "pro", "tokens_consumed": 50000, "requests_made": 500, "duration_seconds": 3600},
+        )
+        client.post(
+            "/api/v1/usage",
+            json={"subscription_tier": "pro", "tokens_consumed": 30000, "requests_made": 300, "duration_seconds": 3600},
+        )
+
+        resp = client.get("/api/v1/usage/prediction/pro")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["subscription_tier"] == "pro"
+        assert "tokens_trend" in data
+        assert "requests_trend" in data
+        # Usage decreased from 50000->30000 tokens and 500->300 requests, trend should be decreasing
+        assert data["tokens_trend"] == "decreasing"
+        assert data["requests_trend"] == "decreasing"

@@ -250,7 +250,7 @@ class UsagePatternService:
         daily_requests = sum(r.requests_made for r in recent_records) / days_span
 
         # Determine trend direction
-        if len(recent_records) >= 3:
+        if len(recent_records) >= 2:
             first_half = recent_records[: len(recent_records) // 2]
             second_half = recent_records[len(recent_records) // 2 :]
             first_tokens = sum(r.tokens_consumed for r in first_half)
