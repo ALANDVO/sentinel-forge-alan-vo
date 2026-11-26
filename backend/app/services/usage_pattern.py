@@ -207,7 +207,7 @@ class UsagePatternService:
         current_tokens = sum(r.tokens_consumed for r in period_records)
         current_requests = sum(r.requests_made for r in period_records)
 
-        limits = TIER_LIMITS.get(subscription_tier, {"tokens": 0, "requests": 0})
+        limits = TIER_LIMITS.get(subscription_tier, TIER_LIMITS["free"])
         tokens_limit = limits["tokens"]
         requests_limit = limits["requests"]
 
